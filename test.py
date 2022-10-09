@@ -77,6 +77,8 @@ def sig(x):
 config = tf.compat.v1.ConfigProto(allow_soft_placement = True)
 sess = tf.compat.v1.Session(config = config)
 
+tf.compat.v1.disable_eager_execution()
+
 x1 = tf.compat.v1.placeholder(tf.float32, [batch_size, step, Height, Width, Channel]) #raw
 x2 = tf.compat.v1.placeholder(tf.float32, [batch_size, step, Height, Width, Channel]) #compressed
 

@@ -112,7 +112,7 @@ class QGConvLSTMCell(tf.compat.v1.nn.rnn_cell.RNNCell):
     x, f, u = tf.split(x, [self._filters, 1, 1], axis=-1)
 
     x = tf.concat([x, h], axis=self._feature_axis)
-    n = x.shape[-1].value
+    n = x.shape[-1]
 
     # m = 4 * self._filters if self._filters > 1 else 4
     m = 2 * self._filters if self._filters > 1 else 2
