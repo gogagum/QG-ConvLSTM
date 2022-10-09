@@ -55,7 +55,7 @@ def dense(x, step):
 
         x_1 = x[:,i,:]
 
-        x_2 = tf.layers.dense(x_1, 1, kernel_initializer = tf.random_normal_initializer, reuse = reuse, name = 'PQF')
+        x_2 = tf.compat.v1.layers.dense(x_1, 1, kernel_initializer = tf.compat.v1.random_normal_initializer, reuse = reuse, name = 'PQF')
 
         if i == 0:
             x_o = tf.expand_dims(x_2, 1)
@@ -67,24 +67,24 @@ def dense(x, step):
 
 def sig(x):
 
-    a = tf.get_variable('W/a', initializer=10.0)
+    a = tf.compat.v1.get_variable('W/a', initializer=10.0)
 
     y = 1/(1 + tf.exp(-x/a))
 
     return y, a
 
 
-config = tf.ConfigProto(allow_soft_placement = True)
-sess = tf.Session(config = config)
+config = tf.compat.v1.ConfigProto(allow_soft_placement = True)
+sess = tf.compat.v1.Session(config = config)
 
-x1 = tf.placeholder(tf.float32, [batch_size, step, Height, Width, Channel]) #raw
-x2 = tf.placeholder(tf.float32, [batch_size, step, Height, Width, Channel]) #compressed
+x1 = tf.compat.v1.placeholder(tf.float32, [batch_size, step, Height, Width, Channel]) #raw
+x2 = tf.compat.v1.placeholder(tf.float32, [batch_size, step, Height, Width, Channel]) #compressed
 
-x_1 = tf.placeholder(tf.float32, [batch_size, step, 190]) #feat
+x_1 = tf.compat.v1.placeholder(tf.float32, [batch_size, step, 190]) #feat
 
-cell = tf.nn.rnn_cell.BasicLSTMCell(num_units=256)
+cell = tf.compat.v1.nn.rnn_cell.BasicLSTMCell(num_units=256)
 
-x3, state = tf.nn.bidirectional_dynamic_rnn(cell, cell, x_1, dtype=x1.dtype, scope = 'PQF')
+x3, state = tf.compat.v1.nn.bidirectional_dynamic_rnn(cell, cell, x_1, dtype=x1.dtype, scope = 'PQF')
 
 x33 = tf.concat([x3[0], x3[1]], axis=-1)
 
@@ -94,7 +94,7 @@ forget, update = generate_weight(x_out)
 
 outputs = network.net_bi_wcell(x2, forget, update, step, Height, Width, filter_num, kernel, relu, CNNlayer, peephole = False, scale = False)
 
-saver = tf.train.Saver()
+saver = tf.compat.v1.train.Saver()
 saver.restore(sess, './QP42_model/model.ckpt-200000')
 
 # num_params = 0

@@ -14,26 +14,26 @@ def CNN(x, step, filter_no, filter_no_last, kernel, relu, layer, scale, name):
 
         if scale == True:
 
-            x_i_1 = tf.layers.conv2d(x_i, filter_no // 3, [3, 3], padding='SAME', reuse=reuse,name='conv' + name + '_' + '01')
-            x_i_2 = tf.layers.conv2d(x_i, filter_no // 3, [5, 5], padding='SAME', reuse=reuse,name='conv' + name + '_' + '02')
-            x_i_3 = tf.layers.conv2d(x_i, filter_no // 3, [7, 7], padding='SAME', reuse=reuse,name='conv' + name + '_' + '03')
+            x_i_1 = tf.compat.v1.layers.conv2d(x_i, filter_no // 3, [3, 3], padding='SAME', reuse=reuse,name='conv' + name + '_' + '01')
+            x_i_2 = tf.compat.v1.layers.conv2d(x_i, filter_no // 3, [5, 5], padding='SAME', reuse=reuse,name='conv' + name + '_' + '02')
+            x_i_3 = tf.compat.v1.layers.conv2d(x_i, filter_no // 3, [7, 7], padding='SAME', reuse=reuse,name='conv' + name + '_' + '03')
             x_i = tf.concat([x_i_1, x_i_2, x_i_3], axis=-1, name='conv' + name + '_' + str(0))
 
         elif scale == False:
 
-            x_i = tf.layers.conv2d(x_i, filter_no, kernel, padding='SAME', reuse=reuse, name='conv' + name + '_' + str(0))
+            x_i = tf.compat.v1.layers.conv2d(x_i, filter_no, kernel, padding='SAME', reuse=reuse, name='conv' + name + '_' + str(0))
 
         if relu == 1:
             x_i = tf.nn.relu(x_i)
 
         for ii in range(1, layer - 1):
 
-            x_i = tf.layers.conv2d(x_i, filter_no, kernel, padding='SAME', reuse=reuse, name='conv' + name + '_' + str(ii))
+            x_i = tf.compat.v1.layers.conv2d(x_i, filter_no, kernel, padding='SAME', reuse=reuse, name='conv' + name + '_' + str(ii))
 
             if relu == 1:
                 x_i = tf.nn.relu(x_i)
 
-        x_i = tf.layers.conv2d(x_i, filter_no_last, kernel, padding='SAME', reuse=reuse, name='conv' + name + '_' + str(layer - 1))
+        x_i = tf.compat.v1.layers.conv2d(x_i, filter_no_last, kernel, padding='SAME', reuse=reuse, name='conv' + name + '_' + str(layer - 1))
 
         if relu == 1:
             if filter_no_last == filter_no:
@@ -56,7 +56,7 @@ def net_bi_wcell(x, f, u, step, Height, Width, filter_num, kernel, relu, CNNlaye
 
     cell = QGConvLSTMCell(shape=[Height, Width], filters = filter_num, kernel = kernel, peephole = peephole)
 
-    x2, state = tf.nn.bidirectional_dynamic_rnn(cell, cell, inputs, dtype = inputs.dtype)
+    x2, state = tf.compat.v1.nn.bidirectional_dynamic_rnn(cell, cell, inputs, dtype = inputs.dtype)
 
     # print("LSTM")
 
